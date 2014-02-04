@@ -1,7 +1,15 @@
-# Data Acquisition Management Service interface definition
-
 name: data_acquisition_management
+
+docstring: |
+  Services related to management of data acquisition flows into the system, such as from instruments,
+  data transform processes and external data sources. Service orchestrates data acquisition and
+  processing by calling DM Distribution and Inventory services. In particular, this service sets up the
+  Data Producer object relationships, used to track data provenance
+
+spec: https://confluence.oceanobservatories.org/display/syseng/CIAD+SA+OV+Data+Acquisition+Management+Service
+
 dependencies: [resource_registry, pubsub_management]
+
 methods:
 
   # -----------------
@@ -11,24 +19,32 @@ methods:
       external_data_provider: !ExternalDataProvider
     out:
       external_data_provider_id: ""
+    throws:
+      BadRequest: if object passed has _id or _rev attribute
 
   update_external_data_provider:
     in:
       external_data_provider: !ExternalDataProvider
     out:
-      success: True
+    throws:
+      BadRequest: if object does not have _id or _rev attribute
+      NotFound: object with specified id does not exist
+      Conflict: object not based on latest persisted object version
 
   read_external_data_provider:
     in:
       external_data_provider_id: ""
     out:
       external_data_provider: !ExternalDataProvider
+    throws:
+      NotFound: object with specified id does not exist
 
   delete_external_data_provider:
     in:
       external_data_provider_id: ""
     out:
-      success: True
+    throws:
+      NotFound: object with specified id does not exist
 
   # -----------------
   # Manipulate data sources
@@ -38,85 +54,256 @@ methods:
       data_source: !DataSource
     out:
       data_source_id: ""
+    throws:
+      BadRequest: if object passed has _id or _rev attribute
 
   update_data_source:
     in:
       data_source: !DataSource
     out:
-      success: True
+    throws:
+      BadRequest: if object does not have _id or _rev attribute
+      NotFound: object with specified id does not exist
+      Conflict: object not based on latest persisted object version
 
   read_data_source:
     in:
       data_source_id: ""
     out:
       data_source: !DataSource
+    throws:
+      NotFound: object with specified id does not exist
 
   delete_data_source:
     in:
       data_source_id: ""
     out:
-      success: True
+    throws:
+      NotFound: object with specified id does not exist
 
 
   # -----------------
-  # Manipulate external data sets
-  create_external_data_set:
+  # Manipulate external datasets
+  create_external_dataset:
     in:
-      external_data_set: !ExternalDataset
+      external_dataset: !ExternalDataset
     out:
-      external_data_set_id: ""
+      external_dataset_id: ""
+    throws:
+      BadRequest: if object passed has _id or _rev attribute
 
-  update_external_data_set:
+  update_external_dataset:
     in:
-      external_data_set: !ExternalDataset
+      external_dataset: !ExternalDataset
     out:
-      success: True
+    throws:
+      BadRequest: if object does not have _id or _rev attribute
+      NotFound: object with specified id does not exist
+      Conflict: object not based on latest persisted object version
 
-  read_external_data_set:
+  read_external_dataset:
     in:
-      external_data_set_id: ""
+      external_dataset_id: ""
     out:
-      external_data_set: !ExternalDataset
+      external_dataset: !ExternalDataset
+    throws:
+      NotFound: object with specified id does not exist
 
-  delete_external_data_set:
+  delete_external_dataset:
     in:
-      external_data_set_id: ""
+      external_dataset_id: ""
     out:
-      success: True
+    throws:
+      NotFound: object with specified id does not exist
+
+
+  # -----------------
+  # Manipulate external data agent instance : ExternalDataAgentInstance
+  create_external_data_agent_instance:
+    in:
+      external_data_agent_instance: !ExternalDataAgentInstance
+    out:
+      external_data_agent_instance_id: ""
+    throws:
+      BadRequest: if object passed has _id or _rev attribute
+
+  update_external_data_agent_instance:
+    in:
+      external_data_agent_instance: !ExternalDataAgentInstance
+    out:
+    throws:
+      BadRequest: if object does not have _id or _rev attribute
+      NotFound: object with specified id does not exist
+      Conflict: object not based on latest persisted object version
+
+  read_external_data_agent_instance:
+    in:
+      external_data_agent_instance_id: ""
+    out:
+      external_data_agent_instance: !ExternalDataAgentInstance
+    throws:
+      NotFound: object with specified id does not exist
+
+  delete_external_data_agent_instance:
+    in:
+      external_data_agent_instance_id: ""
+    out:
+    throws:
+      NotFound: object with specified id does not exist
+
+
+  # -----------------
+  # Manipulate external data source model: ExternalDataSourceModel
+  create_external_data_source_model:
+    in:
+      external_data_source_model: !ExternalDataSourceModel
+    out:
+      external_data_source_model_id: ""
+    throws:
+      BadRequest: if object passed has _id or _rev attribute
+
+  update_external_data_source_model:
+    in:
+      external_data_source_model: !ExternalDataSourceModel
+    out:
+    throws:
+      BadRequest: if object does not have _id or _rev attribute
+      NotFound: object with specified id does not exist
+      Conflict: object not based on latest persisted object version
+
+  read_external_data_source_model:
+    in:
+      external_data_source_model_id: ""
+    out:
+      external_data_source_model: !ExternalDataSourceModel
+    throws:
+      NotFound: object with specified id does not exist
+
+  delete_external_source_model_instance:
+    in:
+      external_data_source_model_id: ""
+    out:
+    throws:
+      NotFound: object with specified id does not exist
+
+
+  # -----------------
+  # The following operations assign and unassign data model
+
+  assign_external_data_provider:
+    docstring: Connect the data source with an external data provider
+    in:
+      data_source_id: ""
+      external_data_provider_id: ""
+    out:
+    throws:
+      NotFound: object with specified id does not exist
+
+  unassign_external_data_provider:
+    docstring: Disonnect the data source from the external data provider
+    in:
+      data_source_id: ""
+      external_data_provider_id: ""
+    out:
+    throws:
+      NotFound: object with specified id does not exist
+
+  # -----------------
+  # The following operations assign and unassign data model
+
+  assign_data_model:
+    docstring: Connect the data source with an external data model
+    in:
+      data_source_id: ""
+      data_source_model_id: ""
+    out:
+    throws:
+      NotFound: object with specified id does not exist
+
+  unassign_data_model:
+    docstring: Disonnect the data source from the external data model
+    in:
+      data_source_id: ""
+      data_source_model_id: ""
+    out:
+    throws:
+      NotFound: object with specified id does not exist
 
   # -----------------
   # The following operations assign and unassign data agents
 
-  assign_data_agent:
-    docstring: Connect the agent instance description with a data source
+  assign_external_data_agent_instance:
+    docstring: Connect the agent instance with an external data set
     in:
-      data_source_id: ""
-      agent_instance: !AgentInstance
+      external_dataset_id: ""
+      agent_instance_id: ""
     out:
-      success: True
+    throws:
+      NotFound: object with specified id does not exist
 
-  unassign_data_agent:
+  unassign_external_data_agent_instance:
+    docstring: Disonnect the agent instance from the external data set
     in:
-      data_agent_id: ""
+      external_dataset_id: ""
+      agent_instance_id: ""
+    out:
+    throws:
+      NotFound: object with specified id does not exist
+
+
+  # -----------------
+  # The following operations assign and unassign an external data set to a data source
+
+  assign_data_source:
+    docstring: Connect the external data set to a data source
+    in:
+      external_dataset_id: ""
       data_source_id: ""
     out:
-      success: True
+    throws:
+      NotFound: object with specified id does not exist
+
+  unassign_data_source:
+    docstring: Disonnect the external data set from the data source
+    in:
+      external_dataset_id: ""
+      data_source_id: ""
+    out:
+    throws:
+      NotFound: object with specified id does not exist
+
+
+  # -----------------
+  # The following operations connects all eoi resource for batch processing
+  assign_eoi_resources:
+    docstring: Connects multiple eoi resources in batch with assocations
+    in:
+      external_data_provider_id: ""
+      data_source_id: ""
+      data_source_model_id: ""
+      external_dataset_id: ""
+      agent_instance_id: ""
+    out:
+    throws:
+      NotFound: object with specified id does not exist
 
   # -----------------
   # The following operations register different types of data producers
 
-  register_data_source:
-    docstring: Register an existing data source as data producer
+  register_external_data_set:
+    docstring: Register an existing external data set as data producer
     in:
-      data_source_id: ""
+      external_dataset_id: ""
     out:
       data_producer_id: ""
 
-  unregister_data_source:
+  unregister_external_data_set:
     in:
-      data_source_id: ""
+      external_dataset_id: ""
     out:
-      success: True
+    throws:
+      NotFound: object with specified id does not exist
+
 
   register_process:
     docstring: Register an existing data process as data producer
@@ -129,7 +316,8 @@ methods:
     in:
       data_process_id: ""
     out:
-      success: True
+    throws:
+      NotFound: object with specified id does not exist
 
   register_instrument:
     docstring: Register an existing instrument as data producer
@@ -142,31 +330,62 @@ methods:
     in:
       instrument_id: ""
     out:
-      success: True
+    throws:
+      NotFound: object with specified id does not exist
+
+  assign_data_product:
+    docstring: Connect the producer for an existing input resource with a data product
+    in:
+      input_resource_id: ""
+      data_product_id: ""
+    out:
+    throws:
+      NotFound: object with specified id does not exist
+
+  unassign_data_product:
+    docstring: Disconnect the Data Product from the Data Producer
+    in:
+      input_resource_id: ""
+      data_product_id: ""
+    out:
+    throws:
+      NotFound: object with specified id does not exist
+
 
   # -----------------
   # The following operations work directly on data producers (use boilerplate instead)
 
   create_data_producer:
+    docstring: Create a data producer resource, create a stream reource via DM then associate the two resources. Currently, data producers and streams are one-to-one. If the data producer is a process, connect the data producer to any parent data producers.
     in:
-      data_producer: !DataProducer
+      name: ""
+      description: ""
     out:
       data_producer_id: ""
+    throws:
+      BadRequest: if object passed has _id or _rev attribute
 
   update_data_producer:
+    docstring: Update the attributes of a data producer resource.
     in:
       data_producer: !DataProducer
     out:
-      success: True
+    throws:
+      BadRequest: if object does not have _id or _rev attribute
+      NotFound: object with specified id does not exist
+      Conflict: object not based on latest persisted object version
 
   read_data_producer:
     in:
       data_producer_id: ""
     out:
       data_producer: !DataProducer
+    throws:
+      NotFound: object with specified id does not exist
 
   delete_data_producer:
     in:
       data_producer_id: ""
     out:
-      success: True
+    throws:
+      NotFound: object with specified id does not exist

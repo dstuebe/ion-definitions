@@ -1,8 +1,13 @@
-# Instrument Management Service interface definition
+name: instrument_management
 
-name: instrument_management_service
-docstring: Manages physical instruments and platforms
+docstring: |
+  This service provides overall coordination for instrument management within an observatory context. In particular it
+  coordinates the access to the instrument registries and the interaction with instrument agents.
+
+spec: https://confluence.oceanobservatories.org/display/syseng/CIAD+SA+OV+Instrument+Management+Service
+
 dependencies: [resource_registry, data_acquisition_management]
+
 methods:
   # -----------------
   # Working with Physical Instrument resources
@@ -41,6 +46,7 @@ methods:
 
 
   create_instrument_agent:
+    docstring: create a cyberinfrastructure resource that represents instrument devices to the CI using a common interface, regardless of the instrument type
     in:
       instrument_agent: !InstrumentAgent
     out:
@@ -73,6 +79,7 @@ methods:
 
 
   create_instrument_device:
+    docstring: The key characteristic of an instrument device is that it is capable of reporting observed data through its interface. A device may be deployed in one location, retrieved, perhaps serviced, then deployed in another location.
     in:
       instrument_device: !InstrumentDevice
     out:
@@ -104,6 +111,7 @@ methods:
 
 
   create_instrument_model:
+    docstring: The instrument model defines specifications for a group of instruments defined by the manufacturer's model number.
     in:
       instrument_model: !InstrumentModel
     out:
@@ -204,6 +212,7 @@ methods:
 
 
   create_platform_device:
+    docstring: Platform resources include power systems, telemetry, networking, clocks, CPU cycles and storage and multiple instruments deployed on that platform.
     in:
       platform_device: !PlatformDevice
     out:
@@ -236,6 +245,7 @@ methods:
 
 
   create_platform_model:
+    docstring: The Platform Model defines specifications for a group of platform instances that is defined by the manufacturer's model number
     in:
       platform_model: !PlatformModel
     out:
@@ -273,6 +283,7 @@ methods:
 
 
   create_sensor_device:
+    docstring: The sensor is the part of the instrument that actually translates the real-world feature into a measured observation.
     in:
       sensor_device: !SensorDevice
     out:
@@ -304,6 +315,7 @@ methods:
 
 
   create_sensor_model:
+    docstring: The sensor model defines specifications for a group of sensors defined by the manufacturer's model number.
     in:
       sensor_model: !SensorModel
     out:
@@ -341,6 +353,7 @@ methods:
 # associations
 
   assign_instrument_device:
+    docstring: assign a physical instrument to a logical instrument 
     in:
       instrument_id: ""
       instrument_device_id: ""
@@ -439,4 +452,334 @@ methods:
     out:
       success: True
 
+
+  ##################
+  #
+  # LifeCycle States
+  #
+
+
+  declare_instrument_agent_planned:
+    in:
+      instrument_agent_id: ""
+    out:
+      success: True
+
+  declare_instrument_agent_developed:
+    in:
+      instrument_agent_id: ""
+    out:
+      success: True
+
+  declare_instrument_agent_integrated:
+    in:
+      instrument_agent_id: ""
+    out:
+      success: True
+
+  declare_instrument_agent_discoverable:
+    in:
+      instrument_agent_id: ""
+    out:
+      success: True
+
+  declare_instrument_agent_available:
+    in:
+      instrument_agent_id: ""
+    out:
+      success: True
+
+  declare_instrument_agent_retired:
+    in:
+      instrument_agent_id: ""
+    out:
+      success: True
+
+  declare_instrument_agent_instance_planned:
+    in:
+      instrument_agent_instance_id: ""
+    out:
+      success: True
+
+  declare_instrument_agent_instance_developed:
+    in:
+      instrument_agent_instance_id: ""
+    out:
+      success: True
+
+  declare_instrument_agent_instance_integrated:
+    in:
+      instrument_agent_instance_id: ""
+    out:
+      success: True
+
+  declare_instrument_agent_instance_discoverable:
+    in:
+      instrument_agent_instance_id: ""
+    out:
+      success: True
+
+  declare_instrument_agent_instance_available:
+    in:
+      instrument_agent_instance_id: ""
+    out:
+      success: True
+
+  declare_instrument_agent_instance_retired:
+    in:
+      instrument_agent_instance_id: ""
+    out:
+      success: True
+
+  declare_instrument_model_planned:
+    in:
+      instrument_model_id: ""
+    out:
+      success: True
+
+  declare_instrument_model_developed:
+    in:
+      instrument_model_id: ""
+    out:
+      success: True
+
+  declare_instrument_model_integrated:
+    in:
+      instrument_model_id: ""
+    out:
+      success: True
+
+  declare_instrument_model_discoverable:
+    in:
+      instrument_model_id: ""
+    out:
+      success: True
+
+  declare_instrument_model_available:
+    in:
+      instrument_model_id: ""
+    out:
+      success: True
+
+  declare_instrument_model_retired:
+    in:
+      instrument_model_id: ""
+    out:
+      success: True
+
+  declare_platform_agent_planned:
+    in:
+      platform_agent_id: ""
+    out:
+      success: True
+
+  declare_platform_agent_developed:
+    in:
+      platform_agent_id: ""
+    out:
+      success: True
+
+  declare_platform_agent_integrated:
+    in:
+      platform_agent_id: ""
+    out:
+      success: True
+
+  declare_platform_agent_discoverable:
+    in:
+      platform_agent_id: ""
+    out:
+      success: True
+
+  declare_platform_agent_available:
+    in:
+      platform_agent_id: ""
+    out:
+      success: True
+
+  declare_platform_agent_retired:
+    in:
+      platform_agent_id: ""
+    out:
+      success: True
+
+  declare_platform_agent_instance_planned:
+    in:
+      platform_agent_instance_id: ""
+    out:
+      success: True
+
+  declare_platform_agent_instance_developed:
+    in:
+      platform_agent_instance_id: ""
+    out:
+      success: True
+
+  declare_platform_agent_instance_integrated:
+    in:
+      platform_agent_instance_id: ""
+    out:
+      success: True
+
+  declare_platform_agent_instance_discoverable:
+    in:
+      platform_agent_instance_id: ""
+    out:
+      success: True
+
+  declare_platform_agent_instance_available:
+    in:
+      platform_agent_instance_id: ""
+    out:
+      success: True
+
+  declare_platform_agent_instance_retired:
+    in:
+      platform_agent_instance_id: ""
+    out:
+      success: True
+
+  declare_platform_model_planned:
+    in:
+      platform_model_id: ""
+    out:
+      success: True
+
+  declare_platform_model_developed:
+    in:
+      platform_model_id: ""
+    out:
+      success: True
+
+  declare_platform_model_integrated:
+    in:
+      platform_model_id: ""
+    out:
+      success: True
+
+  declare_platform_model_discoverable:
+    in:
+      platform_model_id: ""
+    out:
+      success: True
+
+  declare_platform_model_available:
+    in:
+      platform_model_id: ""
+    out:
+      success: True
+
+  declare_platform_model_retired:
+    in:
+      platform_model_id: ""
+    out:
+      success: True
+
+  declare_platform_device_planned:
+    in:
+      platform_device_id: ""
+    out:
+      success: True
+
+  declare_platform_device_developed:
+    in:
+      platform_device_id: ""
+    out:
+      success: True
+
+  declare_platform_device_integrated:
+    in:
+      platform_device_id: ""
+    out:
+      success: True
+
+  declare_platform_device_discoverable:
+    in:
+      platform_device_id: ""
+    out:
+      success: True
+
+  declare_platform_device_available:
+    in:
+      platform_device_id: ""
+    out:
+      success: True
+
+  declare_platform_device_retired:
+    in:
+      platform_device_id: ""
+    out:
+      success: True
+
+  declare_sensor_model_planned:
+    in:
+      sensor_model_id: ""
+    out:
+      success: True
+
+  declare_sensor_model_developed:
+    in:
+      sensor_model_id: ""
+    out:
+      success: True
+
+  declare_sensor_model_integrated:
+    in:
+      sensor_model_id: ""
+    out:
+      success: True
+
+  declare_sensor_model_discoverable:
+    in:
+      sensor_model_id: ""
+    out:
+      success: True
+
+  declare_sensor_model_available:
+    in:
+      sensor_model_id: ""
+    out:
+      success: True
+
+  declare_sensor_model_retired:
+    in:
+      sensor_model_id: ""
+    out:
+      success: True
+
+  declare_sensor_device_planned:
+    in:
+      sensor_device_id: ""
+    out:
+      success: True
+
+  declare_sensor_device_developed:
+    in:
+      sensor_device_id: ""
+    out:
+      success: True
+
+  declare_sensor_device_integrated:
+    in:
+      sensor_device_id: ""
+    out:
+      success: True
+
+  declare_sensor_device_discoverable:
+    in:
+      sensor_device_id: ""
+    out:
+      success: True
+
+  declare_sensor_device_available:
+    in:
+      sensor_device_id: ""
+    out:
+      success: True
+
+  declare_sensor_device_retired:
+    in:
+      sensor_device_id: ""
+    out:
+      success: True
 

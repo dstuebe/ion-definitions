@@ -1,12 +1,34 @@
+DatasetDescription:
+  data_sampling: !enum (name=DatasetDescriptionDataSamplingEnum, value=(NONE, FIRST_LAST, FULL, SHOTGUN, SHOTGUN_COUNT), default=NONE)
+  parameters: {}
+
+UpdateDescription:
+  last_update_result: None
+  last_update_timestamp: None
+  last_signature: ""
+  parameters: {}
+
+---
+
 ExternalDataProvider: !Extends_InformationResource
   institution: !Institution
   contact: !ContactInformation
 
 ExternalDataset: !Extends_InformationResource
-  dataset_description: ""
-  update_description: ""
-  dataset_path: ""
-  temporal_id: ""
-  last_signature: None
+  dataset_description: !DatasetDescription
+  update_description: !UpdateDescription
   contact: !ContactInformation
-  
+
+---
+
+ExternalDataSourceModel: !Extends_InformationResource
+  model: ""
+  data_handler_module: ""
+  data_handler_class: ""
+
+ExternalDataAgent: !Extends_InformationResource
+  agent_version: ""
+
+ExternalDataAgentInstance: !Extends_InformationResource
+  stream_route: !StreamRoute
+  configuration: {}

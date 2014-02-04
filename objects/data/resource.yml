@@ -5,26 +5,28 @@ Resource:
   # _rev: ""   - Revision identifier (comes with every object)
   name: ""
   description: ""
-  lcstate: "NEW"
+  lcstate: "DRAFT"
   ts_created: ""  # Timestamp str in millis in UNIX epoch
   ts_updated: ""
 
 ---
 
-ResourceType: !Extends_Resource
-  tbd: ""
-
-ResourceLifeCycle: !Extends_Resource
-  definition_type: ""
-  definition: {}
-
 TaskableResource: !Extends_Resource
   # Taskable resources are resources with behavior and state. This object describes them.
-  tbd: ""
 
 InformationResource: !Extends_Resource
   # Information resources are pure information artifacts. This object describes them.
-  tbd: ""
+
+---
+
+ResourceType: !Extends_InformationResource
+
+ResourceLifeCycle: !Extends_InformationResource
+  definition_type: ""
+  definition: {}
+
+Attachment: !Extends_InformationResource
+  # To identify attachments to resources
 
 ---
 
@@ -67,8 +69,6 @@ GeospatialBounds:
 GeospatialLocation:
   lat: ""
   lon: ""
-  
----
 
 # TODO: Replace in favor of Resource base object
 ResourceBasics:
@@ -78,7 +78,3 @@ ResourceBasics:
 # TODO: Refine and use consistently, where needed to find
 ResourceFilter:
   filters: {}
-
-
-Attachment: !Extends_Resource
-  tbd: ""

@@ -1,37 +1,105 @@
-# Central configuration file for Ion services and modules.
+# Central configuration file for ION container, system and services.
 # The contents are transformed into a dict that supports dot notation:
-# CFG.broker.amqp.host
-# Do not modify this file! Set overrides in pyon.local.yml
+#   CFG.server.amqp.host
+# Do not modify this file! Set overrides in pyon.local.yml or in rel files
 
+
+# ----------------------------------------------------------------------------------
+# The "system" root entry defines settings for the distributed ION system that this
+# container starts or joins. A system comprises all containers with the same sysname.
+system:
+  # sysname - by default it is generated from your system's uname.
+  # set in pyon.local.yml or via command line to lock it to something.
+  name:
+
+  # The Org (name) that starts the system
+  root_org: ION
+  # Load config from directory (merge over pyon.yml+pyon.local.yml but allow command line override)
+  config_from_directory: True
+  # Global flag to use a mock datastore instead of CouchDB if True
+  mockdb: False
+  # Global flag to clean all persistent stores and reset system to defaults on start if True
+  # Note: this is dangerous and will likely change to False or go away soon
+  force_clean: True
+  # Flag indicating test run. Is set to False if started as interactive container
+  testing: True
+  # Global flag indicating debug mode. Can perform more expensive operations if True
+  debug: True
+  filesystem:
+    force_clean: False
+    cache: /tmp/ion/run/cache
+    temp: /tmp/ion/tmp
+    run: /tmp/ion/run
+    log: /tmp/ion/run/log
+    users: /tmp/ion/usr
+    resource: /tmp/ion/res
+    library: /tmp/ion/lib
+  # Global flag indicating degraded mode during initial bootstrap phases
+  # (e.g. no use of RR, messaging, datastore, events, etc)
+  bootstrapping: False
+  # If true, the first container started will bootstrap the system
+  auto_bootstrap: True
+
+# ----------------------------------------------------------------------------------
+# The "server" root entry defines profiles for connections/credentials to external servers
+# These entries are names of server/credential profiles that can be referenced in other settings.
 server:
   amqp:
+    # The basic broker connection
+    type: amqp_91
     host: localhost
     port: 5672
     username: guest
     password: guest
     vhost: /
     heartbeat: 30
+  amqp_priv:
+    # The privileged broker connection the Exchange Management Service uses
+    type: amqp_91
+    host: localhost
+    port: 5672
+    username: ion
+    password: ion
+    vhost: /
+    heartbeat: 30
   couchdb:
+    # The basic CouchDB connection
+    type: couchdb
     host: localhost
     port: 5984
     username:
     password:
 
-system:
-  # sysname - by default it is generated from your system's uname.
-  # uncomment and set here if you want to lock it to something.
-  #name: r2demo
-  name:
 
+# ----------------------------------------------------------------------------------
+# The "container" root entry defines settings for the current Pyon container
+container:
+  directory:
+    server: couchdb
+
+  messaging:
+    server:
+      primary: amqp
+      priviledged: amqp_priv
+    endpoint: # TBD: move entries to here
+    interceptor: # TBD: move entries to here
+
+  objects:
+    validate: # TBD: move entries to here
+
+# TBD: Rename to "container". See there.
 cc:
   timeout:
     shutdown: 30.0
     heartbeat: 3.0
   proctype: green   # Type of ION process to spawn for new services/processes (green or python)
 
+validate:
+  setattr: True
+
 endpoint:
   receive:
-    timeout: 10   # Receive timeout in seconds
+    timeout: 10   # RPC receive timeout in seconds
 
 interceptor:
   interceptors:
@@ -60,13 +128,13 @@ interceptor:
           policy:
             class: pyon.core.governance.policy.policy_interceptor.PolicyInterceptor
 
-
   stack:
     message_outgoing: [codec, encode]
     message_incoming: [encode, codec]
     process_outgoing: [governance]
     process_incoming: [governance]
 
+# TBD: Rename system.exchange_spaces
 exchange_spaces:
    # define the names and structure of exchange spaces and exchange points
     ioncore:
@@ -76,7 +144,27 @@ exchange_spaces:
             events:
                 type: topic_tree
 
+# TBD: Rename system.core_xps
 core_xps:
     # used as defaults by pyon.ion.endpoint and PubSub Mgmt Service
     science_data: ioncore.science_data
     events: ioncore.events
+
+core_stream_types:
+    - "BlogStreamType"
+    - "ScienceStreamType"
+
+
+# ----------------------------------------------------------------------------------
+# The "service" root entry
+service:
+
+
+# TBD: Remove (use global flags instead)
+external_data_agent_management:
+  persistent: true
+
+# TBD: Rename container.service_gateway
+web_server:
+  port: 5000
+  hostname: localhost

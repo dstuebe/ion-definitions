@@ -1,13 +1,17 @@
-# Marine Facility Management Service interface definition
+name: marine_facility_management
+
+docstring: |
+  Performs all the observatory level coordination of logical and physical resources and their policies.
+
+spec: https://confluence.oceanobservatories.org/display/syseng/CIAD+SA+OV+Marine+Facility+Management+Service
+
+dependencies: [resource_registry, instrument_management]
 
 # TODO:
 # - Observatory policy
 # - Deployment
 # - Life cycle support operations
 
-name: marine_facility_management
-docstring: Manages the marine facility and policy and all associated sites, logical instruments and platforms
-dependencies: [resource_registry, instrument_management_service]
 methods:
   create_marine_facility:
     in:
@@ -44,6 +48,7 @@ methods:
   # Note:
 
   create_site:
+    docstring: The concept of site typically generalizes the specific hardware or location that it represents. A site can be viewed and monitored as a collection of related resources.
     in:
       site: !Site
     out:
@@ -74,6 +79,7 @@ methods:
       site_list: []
 
   assign_site:
+    docstring: Sites can be nested within Sites.
     in:
       child_site_id: ""
       parent_site_id: ""
@@ -93,6 +99,7 @@ methods:
 
 
   create_logical_instrument:
+    docstring: A logical instrument is a virtual or conceptual representation of a series of instruments in the same place over time.
     in:
       logical_instrument: !LogicalInstrument
     out:
@@ -129,6 +136,7 @@ methods:
 
 
   create_logical_platform:
+    docstring: A logical platform is a virtual or conceptual representation of a series of platforms in the same place over time.
     in:
       logical_platform: !LogicalPlatform
     out:
@@ -165,6 +173,7 @@ methods:
 
 
   assign_platform:
+    docstring: A Platform agent can host (aggregate) other platforms and instruments
     in:
       logical_platform_id: ""
       parent_site_id: ""
@@ -179,6 +188,7 @@ methods:
       success: True
 
   assign_instrument:
+    docstring: assign an logical instrument to a host platform, also logical.
     in:
       logical_instrument_id: ""
       parent_site_id: ""
@@ -197,3 +207,155 @@ methods:
   define_observatory_policy:
     in:
     out:
+
+
+  ##################
+  #
+  # LifeCycle States
+  #
+
+
+  declare_logical_instrument_planned:
+    in:
+      logical_instrument_id: ""
+    out:
+      success: True
+
+  declare_logical_instrument_developed:
+    in:
+      logical_instrument_id: ""
+    out:
+      success: True
+
+  declare_logical_instrument_integrated:
+    in:
+      logical_instrument_id: ""
+    out:
+      success: True
+
+  declare_logical_instrument_discoverable:
+    in:
+      logical_instrument_id: ""
+    out:
+      success: True
+
+  declare_logical_instrument_available:
+    in:
+      logical_instrument_id: ""
+    out:
+      success: True
+
+  declare_logical_instrument_retired:
+    in:
+      logical_instrument_id: ""
+    out:
+      success: True
+
+  declare_logical_platform_planned:
+    in:
+      logical_platform_id: ""
+    out:
+      success: True
+
+  declare_logical_platform_developed:
+    in:
+      logical_platform_id: ""
+    out:
+      success: True
+
+  declare_logical_platform_integrated:
+    in:
+      logical_platform_id: ""
+    out:
+      success: True
+
+  declare_logical_platform_discoverable:
+    in:
+      logical_platform_id: ""
+    out:
+      success: True
+
+  declare_logical_platform_available:
+    in:
+      logical_platform_id: ""
+    out:
+      success: True
+
+  declare_logical_platform_retired:
+    in:
+      logical_platform_id: ""
+    out:
+      success: True
+
+  declare_marine_facility_planned:
+    in:
+      marine_facility_id: ""
+    out:
+      success: True
+
+  declare_marine_facility_developed:
+    in:
+      marine_facility_id: ""
+    out:
+      success: True
+
+  declare_marine_facility_integrated:
+    in:
+      marine_facility_id: ""
+    out:
+      success: True
+
+  declare_marine_facility_discoverable:
+    in:
+      marine_facility_id: ""
+    out:
+      success: True
+
+  declare_marine_facility_available:
+    in:
+      marine_facility_id: ""
+    out:
+      success: True
+
+  declare_marine_facility_retired:
+    in:
+      marine_facility_id: ""
+    out:
+      success: True
+
+  declare_site_planned:
+    in:
+      site_id: ""
+    out:
+      success: True
+
+  declare_site_developed:
+    in:
+      site_id: ""
+    out:
+      success: True
+
+  declare_site_integrated:
+    in:
+      site_id: ""
+    out:
+      success: True
+
+  declare_site_discoverable:
+    in:
+      site_id: ""
+    out:
+      success: True
+
+  declare_site_available:
+    in:
+      site_id: ""
+    out:
+      success: True
+
+  declare_site_retired:
+    in:
+      site_id: ""
+    out:
+      success: True
+

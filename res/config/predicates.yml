@@ -1,0 +1,152 @@
+# predicates.yml
+
+# This is the authoritative definition of all permissible association predicates in the system
+
+# WARNING: !!! Make sure the same predicate does NOT occur twice in the list below !!!
+
+PredicateTypes:
+#SA
+  hasAttachment:
+    domain: [InstrumentDevice]
+    range: [Attachment]
+  hasAgentInstance:
+    domain: [PlatformDevice, InstrumentDevice, ExternalDataset]
+    range: [PlatformAgentInstance,InstrumentAgentInstance, ExternalDataAgentInstance]
+  hasAssignment:
+    domain: [PlatformDevice, InstrumentDevice]
+    range: [PlatformLogical, InstrumentLogical]
+  hasParent:
+    domain: [DataProducer]
+    range: [DataProducer]
+  hasDataset:
+    domain: [DataProducer, DataProduct]
+    range: [Dataset]
+  hasDataProducer:
+    domain: [DataProcess, InstrumentDevice, ExternalDataset, DataProduct ]
+    range: [DataProducer]
+  hasInputDataProducer:
+    domain: [DataProducer]
+    range: [DataProducer]
+  hasInputProduct:
+    domain: [DataProcess]
+    range: [DataProduct]
+  hasInstance:
+    domain: [PlatformAgent, InstrumentAgent, DataProcessDefinition]
+    range: [PlatformAgentInstance, InstrumentAgentInstance, DataProcess]
+  hasInstrument:
+    domain: [PlatformDevice]
+    range: [InstrumentDevice]
+  hasModel:
+    domain: [PlatformDevice, InstrumentDevice, Sensor, InstrumentAgent, PlatformAgent, DataSource, ExternalDataAgent]
+    range: [PlatformModel, InstrumentModel, SensorModel, ExternalDataSourceModel]
+  hasOutputProduct:
+    domain: [DataProcess]
+    range: [DataProduct]
+  hasPlatform:
+    domain: [MarineFacility, Site, PlatformLogical]
+    range: [PlatformDevice, PlatformLogical]
+  hasSensor:
+    domain: [InstrumentDevice]
+    range: [Sensor]
+  hasSite:
+    domain: [MarineFacility, Site]
+    range: [Site]
+# DM
+  hasArchive:
+    domain: [Datastore]
+    range: [PersistentArchive]
+  hasCatalog:
+    domain: [View]
+    range: [Catalog]
+  hasDatastore:
+    domain: [View, Index]
+    range: [Datastore]
+  hasIndex:
+    domain: [Catalog]
+    range: [Index]
+  hasOutStream:
+    domain: [Transform]
+    range: [Stream]
+  hasProcessDefinition:
+    domain: [Transform]
+    range: [ProcessDefinition]
+  hasSubscription:
+    domain: [Transform, ExchangePoint]
+    range: [Subscription]
+  hasStream:
+    domain: [Replay, DataProcess, DataProducer, Dataset, ExchangePoint, Subscription]
+    range: [Stream]
+  hasTopology:
+    domain: [Stream, Subscription]
+    range: [TopicTopology]
+  hasTopicTopology:
+    domain: [ExchangePoint]
+    range: [TopicTopology]
+  hasTransform:
+    domain: [DataProcess, IngestionConfiguration]
+    range: [Transform]
+# COI
+  hasAgent:
+    domain: [TaskableReource]
+    range: [Agent]
+  hasAttachment:
+    domain: [InstrumentDevice]
+    range: [Attachment]
+  hasCredentials:
+    domain: [UserIdentity]
+    range: [UserCredentials]
+  hasExchangeBroker:
+    domain: [ExchangeSpace]
+    range: [ExchangeBroker]
+  hasExchangeName:
+    domain: [ExchangeSpace]
+    range: [ExchangeName]
+  hasExchangePoint:
+    domain: [ExchangeSpace]
+    range: [ExchangePoint]
+  hasExchangeSpace:
+    domain: [Org]
+    range: [ExchangeSpace]
+  hasInfo:
+    domain: [UserIdentity]
+    range: [UserInfo]
+  hasLifecycle:
+    domain: [Resource]
+    range: [ResourceLifecycle]
+  hasMembership:
+    domain: [Org]
+    range: [UserIdentity]
+  hasOrgAffiliation:
+    domain: [Org]
+    range: [Org]
+  hasOwner:
+    domain: [Resource]
+    range: [UserIdentity]
+  hasPolicy:
+    domain: [Resource]
+    range: [Policy]
+  hasResource:
+    domain: [Org]
+    range: [Resource]
+  hasRole:
+    domain: [Conversation,UserIdentity]
+    range: [ConversationRole,UserRole]
+  hasType:
+    domain: [Conversation]
+    range: [ServiceDefinition]
+# CEI
+  supportsExecutionEngine:
+    domain: [ProcessDefinition]
+    range: [ExecutionEngineDefinition]
+# EOI
+  hasProvider:
+    domain: [DataSource]
+    range: [ExternalDataProvider]
+  hasSource:
+    domain: [ExternalDataset]
+    range: [DataSource]
+
+# Examples
+  hasAccount:
+    domain: [BankCustomer]
+    range: [BankAccount]

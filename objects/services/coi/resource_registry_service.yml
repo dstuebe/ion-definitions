@@ -1,19 +1,25 @@
-# Resource Registry Service interface definition
+name: resource_registry
 
 docstring: |
-  Service used to create, read, update and delete resources
+  Service used to create, read, update and delete persistent resources
   (IonObjects).  Additionally, provides methods to manipulate
-  resource associations.
-name: resource_registry
+  resource associations and resource life cycle state.
+
+spec: https://confluence.oceanobservatories.org/display/syseng/CIAD+COI+OV+Resource+Registry+Service
+
 dependencies: []
+
 methods:
   create:
     docstring: |
       Persist an instance of the resource passed in the object param.
+      Returns a tuple (_id, _rev) for the persistend object.
     in:
       object: {}
     out:
       tuple: []
+    throws:
+      BadRequest: object has _id field
 
   read:
     docstring: |
@@ -40,13 +46,14 @@ methods:
     throws:
       NotFound: object with specified id does not exist
       Conflict: object not based on latest persisted object version
+      BadRequest: object does not have required _id or _rev or lcstate was modified compared to persisted object version
 
   delete:
     docstring: |
       For now, permanently delete object and all previous versions of
       object. Throws exception if object does not exist.
     in:
-      object: {}
+      object_id: ""
     out:
     throws:
       NotFound: object does not exist
@@ -55,13 +62,21 @@ methods:
 
   execute_lifecycle_transition:
     docstring: |
-      Alter object lifecycle. Throws exception if object does not exist.
+      Alter object lifecycle according to given transition event. Throws exception
+      if resource object does not exist or given transition_event is unknown/illegal.
+      The optional lcstate argument asserts that the current life cycle state matches.
+      The new life cycle state after applying the transition is returned.
     in:
       resource_id: ""
-      lcstate: ""
+      transition_event: ""
+      current_lcstate: ""
     out:
+      lcstate: ""
     throws:
-      NotFound: object does not exist
+      NotFound: resource object does not exist
+      BadRequest: transition event unknown
+      Inconsistent: resource not in current_state or transition illegal in current state
+      Conflict: race condition while trying to update
 
   # -----------------
 
@@ -72,6 +87,10 @@ methods:
       object ids.  Valid predicates can be found in res/config/associations.yml.
       Subject and object must be of the proper types for the predicate or
       an exception will be thrown.
+      Assoc_type determines the type of the association. If not specified, uses
+      the default "H2H". The possible values are H2H, H2R, R2H, R2R, where "H" stands
+      for an association to the head revision and "R" stands for an association
+      to a specific revision.
     in:
       subject:
       predicate:
@@ -81,7 +100,7 @@ methods:
       tuple: []
     throws:
       NotFound: subject or object does not exist
-      BadRequest: predicate is unknown or subject or object are invalid types for predicate
+      BadRequest: subject, predicate or object parameter missing, unknown value passed for the assoc_type parameter, predicate is unknown, subject or object are invalid types for predicate, or subject or object do not have _id field
       
 
   delete_association:
@@ -110,6 +129,8 @@ methods:
       id_only: False
     out:
       list: []
+    throws:
+      BadRequest: missing parameters, or object id field missing in subject
 
   find_subjects:
     docstring: |
@@ -125,6 +146,8 @@ methods:
       id_only: False
     out:
       list: []
+    throws:
+      BadRequest: missing parameters, or object id field missing in object
 
   find_associations:
     docstring: |
@@ -138,6 +161,8 @@ methods:
       id_only: False
     out:
       list: []
+    throws:
+      BadRequest: missing parameters, or object id field missing in subject or object
 
   get_association:
     docstring: |
@@ -148,20 +173,27 @@ methods:
       subject: ""
       predicate: ""
       object: ""
+      id_only: False
     out:
       association: {}
     throws:
+      BadRequest: missing parameters, or object id field missing in subject or object
       NotFound: association does not exist
       Inconsistent: multiple associations satisfy the subject, predicate, object tuple
 
   find_resources:
     docstring: |
-      Utility method for finding resources via various attributes.  Legal attribute
-      combinations are:
-        name, restype
-        restype, lcstate
-        restype,
+      Utility method for finding resources via various attributes, including resource type,
+      life cycle state and name. Legal attribute combinations are:
+        restype
         lcstate
+        restype, lcstate
+        name
+        name, restype
+      Returns a tuple (list_of_resources, list_of_matches) if id_only == False or
+      (list_of_resource_ids, list_of_matches) otherwise. List_of_matches is a list of
+      dicts with keys (type, lcstate, name, id), providing further information about the
+      matching resources.
     in:
       restype: ""
       lcstate: ""
@@ -169,3 +201,6 @@ methods:
       id_only: False
     out:
       list: []
+    throws:
+      BadRequest: incompatible parameters
+      

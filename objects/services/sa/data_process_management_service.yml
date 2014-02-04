@@ -1,19 +1,30 @@
-# Data Process Management Service interface definition
-
 name: data_process_management
-dependencies: [resource_registry, data_product_management, transform_management_service, data_acquisition_management]
+
+docstring: |
+  Services to monitor and control instantiated data processes anywhere in the OOI network. Also manage and update metadata related to datasets,
+  data products and data streams.
+
+spec: https://confluence.oceanobservatories.org/display/syseng/CIAD+SA+OV+Data+Process+Management+Service
+
+dependencies: [resource_registry, data_product_management, transform_management, data_acquisition_management, pubsub_management]
+
 methods:
   create_data_process_definition:
+    docstring: Create a resource which defines the processing of a stream, from transform definition to scheduling
     in:
       data_process_definition: !DataProcessDefinition
     out:
       data_process_definition_id: ""
+    throws:
+      BadRequest: if object does not have _id or _rev attribute
+      NotFound: object with specified id does not exist
 
   update_data_process_definition:
     in:
       data_process_definition: !DataProcessDefinition
     out:
-      success: True
+    throws:
+      NotFound: object with specified id does not exist
 
   read_data_process_definition:
     in:
@@ -25,7 +36,8 @@ methods:
     in:
       data_process_definition_id: ""
     out:
-      success: True
+    throws:
+      NotFound: object with specified id does not exist
 
   find_data_process_definitions:
     in:
@@ -36,9 +48,10 @@ methods:
   # -----------------
 
   create_data_process:
+    docstring: Create an instance or realization of a data process definition.
     in:
       data_process_definition_id: ""
-      in_subscription_id: ""
+      in_data_product_id: ""
       out_data_product_id: ""
     out:
       data_process_id: ""
@@ -47,6 +60,8 @@ methods:
     #This op may not make sense at this time
     in:
     out:
+    throws:
+      NotFound: object with specified id does not exist
 
   read_data_process:
     in:
@@ -60,7 +75,8 @@ methods:
     in:
       data_process_id: ""
     out:
-      success: True
+    throws:
+      NotFound: object with specified id does not exist
 
   find_data_process:
     in:
@@ -75,4 +91,5 @@ methods:
     in:
       process: ""
     out:
-      success: True
+    throws:
+      BadRequest: if object does not have _id or _rev attribute
